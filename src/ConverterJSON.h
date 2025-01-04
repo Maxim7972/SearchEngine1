@@ -1,4 +1,3 @@
-// include/ConverterJSON.h
 #pragma once
 
 #include <string>
@@ -19,8 +18,4 @@ private:
     nlohmann::json config_;
     nlohmann::json requests_;
     nlohmann::json answers_;
-
-    void LoadConfig();
-    void LoadRequests();
-    void LoadAnswers();
 };
