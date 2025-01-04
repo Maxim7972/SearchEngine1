@@ -11,7 +11,7 @@ public:
     const std::unordered_map<std::string, std::vector<size_t>>& GetIndex() const;
 
 private:
-    std::unordered_map<std::string, std::vector<size_t>> index; // словарь: слово -> список документов
+    std::unordered_map<std::string, std::vector<size_t>> index;
 };
 
 #endif // INVERTEDINDEX_H
