@@ -1,6 +1,7 @@
 #include "SearchServer.h"
 #include <algorithm>
 #include <sstream>
+
 SearchServer::SearchServer(const InvertedIndex& idx) : index(idx) {}
 
 std::vector<std::vector<RelativeIndex>> SearchServer::search(const std::vector<std::string>& queries_input) {
@@ -14,12 +15,11 @@ std::vector<std::vector<RelativeIndex>> SearchServer::search(const std::vector<s
         while (stream >> word) {
             if (index.GetIndex().count(word)) {
                 for (const auto& doc_id : index.GetIndex().at(word)) {
-                    query_results.push_back({ doc_id, 1.0 }); // Rank calculation can be added here
+                    query_results.push_back({ doc_id, 1.0 });
                 }
             }
         }
 
-        // Sort results by rank (for simplicity, all ranks are 1.0 here)
         std::sort(query_results.begin(), query_results.end(), [](const RelativeIndex& a, const RelativeIndex& b) {
             return a.rank > b.rank;
             });
