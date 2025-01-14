@@ -1,5 +1,9 @@
+#include "InvertedIndex.h"
 #include "SearchServer.h"
+#include "Logger.h"
 #include <iostream>
+#include <vector>
+#include <string>
 
 void DisplayResults(const std::vector<std::string>& requests, const std::vector<std::vector<RelativeIndex>>& results) {
     for (size_t i = 0; i < requests.size(); ++i) {
@@ -19,7 +23,8 @@ void DisplayResults(const std::vector<std::string>& requests, const std::vector<
 
 int main() {
     try {
-        // Заданные документы
+        Logger::GetInstance().Log("Application started.");
+
         std::vector<std::string> docs = {
             "milk milk milk milk water water water",
             "milk water water",
@@ -27,23 +32,21 @@ int main() {
             "americano cappuccino"
         };
 
-        // Запросы для поиска
         std::vector<std::string> requests = { "milk water", "sugar" };
 
-        // Создание инвертированного индекса и обновление базы документов
         InvertedIndex idx;
         idx.UpdateDocumentBase(docs);
 
-        // Создание поискового сервера
         SearchServer srv(idx);
 
-        // Выполнение поиска по запросам
         auto results = srv.search(requests);
 
-        // Вывод результатов на экран
         DisplayResults(requests, results);
+
+        Logger::GetInstance().Log("Application finished successfully.");
     }
     catch (const std::exception& e) {
+        Logger::GetInstance().Log(std::string("Error: ") + e.what());
         std::cerr << "Ошибка: " << e.what() << "\n";
     }
 
