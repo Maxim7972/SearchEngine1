@@ -4,16 +4,16 @@
 
 void InvertedIndex::UpdateDocumentBase(const std::vector<std::string>& docs) {
     Logger::GetInstance().Log("Updating document base.");
-    for (size_t doc_id = 0; doc_id < docs.size(); ++doc_id) {
-        std::istringstream stream(docs[doc_id]);
+    for (size_t docId = 0; docId < docs.size(); ++docId) {
+        std::istringstream stream(docs[docId]);
         std::string word;
         while (stream >> word) {
-            index[word].push_back(doc_id);
+            index[word][docId]++;
         }
     }
     Logger::GetInstance().Log("Document base updated.");
 }
 
-const std::unordered_map<std::string, std::vector<size_t>>& InvertedIndex::GetIndex() const {
+const std::unordered_map<std::string, std::unordered_map<int, int>>& InvertedIndex::GetIndex() const {
     return index;
 }
