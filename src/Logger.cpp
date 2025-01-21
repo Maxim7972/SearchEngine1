@@ -1,5 +1,6 @@
 #include "Logger.h"
 #include <iostream>
+#include <iomanip>
 #include <ctime>
 
 Logger::Logger() {
@@ -20,8 +21,11 @@ Logger& Logger::GetInstance() {
     return instance;
 }
 
-void Logger::Log(const std::string& message) {
+void Logger::Log(const std::string& message, const std::string& level) {
     std::lock_guard<std::mutex> lock(logMutex);
     std::time_t now = std::time(nullptr);
-    logFile << std::ctime(&now) << ": " << message << std::endl;
+    std::tm localTime = *std::localtime(&now);
+    logFile << "[" << std::put_time(&localTime, "%Y-%m-%d %H:%M:%S") << "] "
+        << "[" << level << "] "
+        << message << std::endl;
 }
