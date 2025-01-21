@@ -1,17 +1,13 @@
-#ifndef INVERTEDINDEX_H
-#define INVERTEDINDEX_H
-
+#pragma once
+#include <string>
 #include <unordered_map>
 #include <vector>
-#include <string>
 
 class InvertedIndex {
 public:
     void UpdateDocumentBase(const std::vector<std::string>& docs);
-    const std::unordered_map<std::string, std::vector<size_t>>& GetIndex() const;
+    const std::unordered_map<std::string, std::unordered_map<int, int>>& GetIndex() const;
 
 private:
-    std::unordered_map<std::string, std::vector<size_t>> index;
+    std::unordered_map<std::string, std::unordered_map<int, int>> index;
 };
-
-#endif // INVERTEDINDEX_H
