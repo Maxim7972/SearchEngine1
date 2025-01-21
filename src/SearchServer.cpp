@@ -3,35 +3,39 @@
 #include <algorithm>
 #include <sstream>
 
-SearchServer::SearchServer(const InvertedIndex& idx) : index(idx) {
-    Logger::GetInstance().Log("SearchServer initialized.");
-}
+SearchServer::SearchServer(const InvertedIndex& idx) : index(idx) {}
 
-std::vector<std::vector<RelativeIndex>> SearchServer::search(const std::vector<std::string>& queries_input) {
-    Logger::GetInstance().Log("Search started.");
-    std::vector<std::vector<RelativeIndex>> result;
+std::vector<std::vector<RelativeIndex>> SearchServer::Search(const std::vector<std::string>& queries) {
+    std::vector<std::vector<RelativeIndex>> results;
 
-    for (const auto& query : queries_input) {
-        Logger::GetInstance().Log("Processing query: " + query);
-        std::vector<RelativeIndex> query_results;
-
+    for (const auto& query : queries) {
+        std::unordered_map<int, float> docScores;
         std::istringstream stream(query);
         std::string word;
+
         while (stream >> word) {
             if (index.GetIndex().count(word)) {
-                for (const auto& doc_id : index.GetIndex().at(word)) {
-                    query_results.push_back({ doc_id, 1.0 });
+                for (const auto& [docId, count] : index.GetIndex().at(word)) {
+                    docScores[docId] += count;
                 }
             }
         }
 
-        std::sort(query_results.begin(), query_results.end(), [](const RelativeIndex& a, const RelativeIndex& b) {
+        std::vector<RelativeIndex> queryResult;
+        float maxScore = 0;
+        for (const auto& [docId, score] : docScores) {
+            maxScore = std::max(maxScore, score);
+        }
+        for (const auto& [docId, score] : docScores) {
+            queryResult.push_back({ docId, score / maxScore });
+        }
+
+        std::sort(queryResult.begin(), queryResult.end(), [](const RelativeIndex& a, const RelativeIndex& b) {
             return a.rank > b.rank;
             });
 
-        result.push_back(query_results);
+        results.push_back(queryResult);
     }
 
-    Logger::GetInstance().Log("Search completed.");
-    return result;
+    return results;
 }
