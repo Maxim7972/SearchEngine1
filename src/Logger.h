@@ -6,7 +6,7 @@
 class Logger {
 public:
     static Logger& GetInstance();
-    void Log(const std::string& message);
+    void Log(const std::string& message, const std::string& level = "INFO");
 
 private:
     Logger();
