@@ -1,8 +1,6 @@
 #pragma once
-
 #include <string>
 #include <vector>
-#include <fstream>
 #include <nlohmann/json.hpp>
 
 class ConverterJSON {
